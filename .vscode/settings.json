@@ -1,0 +1,93 @@
+{
+  "files.defaultLanguage": "cpp",
+  "editor.formatOnType": true,
+  "editor.snippetSuggestions": "top",
+  "code-runner.runInTerminal": true,
+  "code-runner.executorMap": {
+
+    "c": "cd $dir && clang $fileName -o $fileNameWithoutExt.exe -Wall -g -Og -static-libgcc -fcolor-diagnostics --target=x86_64-w64-mingw -std=c11 && $dir$fileNameWithoutExt",
+    "cpp": "cd $dir && clang++ $fileName -o $fileNameWithoutExt.exe -Wall -g -Og -static-libgcc -fcolor-diagnostics --target=x86_64-w64-mingw -std=c++17 -lpsapi && $dir$fileNameWithoutExt"
+  },
+  "code-runner.saveFileBeforeRun": true,
+  "code-runner.preserveFocus": true,
+  "code-runner.clearPreviousOutput": false,
+  "C_Cpp.clang_format_sortIncludes": true,
+  "C_Cpp.intelliSenseEngine": "Default",
+  "C_Cpp.errorSquiggles": "Disabled",
+  "C_Cpp.autocomplete": "Disabled",
+  "C_Cpp.clang_format_path": "D:\\Program Files\\LLVM\\bin\\clang-format.exe",
+  "clang.cflags": [
+    "--target=x86_64-w64-mingw",
+    "-std=c11",
+    "-Wall"
+  ],
+  "clang.cxxflags": [
+    "--target=x86_64-w64-mingw",
+    "-std=c++17",
+    "-Wall"
+  ],
+  "clang.completion.enable": true,
+  "files.associations": {
+    "iostream": "cpp",
+    "cmath": "cpp",
+    "ostream": "cpp",
+    "string": "cpp",
+    "array": "cpp",
+    "atomic": "cpp",
+    "*.tcc": "cpp",
+    "cctype": "cpp",
+    "clocale": "cpp",
+    "cstdarg": "cpp",
+    "cstddef": "cpp",
+    "cstdint": "cpp",
+    "cstdio": "cpp",
+    "cstdlib": "cpp",
+    "cstring": "cpp",
+    "ctime": "cpp",
+    "cwchar": "cpp",
+    "cwctype": "cpp",
+    "deque": "cpp",
+    "unordered_map": "cpp",
+    "vector": "cpp",
+    "exception": "cpp",
+    "algorithm": "cpp",
+    "memory": "cpp",
+    "memory_resource": "cpp",
+    "optional": "cpp",
+    "string_view": "cpp",
+    "system_error": "cpp",
+    "tuple": "cpp",
+    "type_traits": "cpp",
+    "utility": "cpp",
+    "fstream": "cpp",
+    "initializer_list": "cpp",
+    "iomanip": "cpp",
+    "iosfwd": "cpp",
+    "istream": "cpp",
+    "limits": "cpp",
+    "new": "cpp",
+    "sstream": "cpp",
+    "stdexcept": "cpp",
+    "streambuf": "cpp",
+    "typeinfo": "cpp"
+  },
+  "terminal.integrated.profiles.windows": {
+
+    "PowerShell": {
+      "source": "PowerShell",
+      "icon": "terminal-powershell",
+      "files.autoGuessEncoding": true
+    },
+    "Command Prompt": {
+      "path": [
+        "${env:windir}\\Sysnative\\cmd.exe",
+        "${env:windir}\\System32\\cmd.exe"
+      ],
+      "args": [],
+      "icon": "terminal-cmd"
+    },
+    "Git Bash": {
+      "source": "Git Bash"
+    }
+  }
+}
