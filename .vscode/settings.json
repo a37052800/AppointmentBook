@@ -69,7 +69,8 @@
     "sstream": "cpp",
     "stdexcept": "cpp",
     "streambuf": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "timsfunction.h": "c"
   },
   "terminal.integrated.profiles.windows": {
 
