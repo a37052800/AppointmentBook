@@ -20,6 +20,13 @@ void TimsAddForm()
     printf("(Prass b for back)\n");
 }
 
+void TimsSearchForm()
+{
+    system("cls");
+    printf("=======================================================\n");
+    printf("(Prass b for back)\n");
+}
+
 void TimsCloseForm()
 {
     system("cls");

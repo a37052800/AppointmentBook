@@ -19,6 +19,7 @@ int main()
     switch (command)
     {
     case 'n':
+    {
         TimsAddForm();
         appointment app;
         if (Add(&app))
@@ -34,8 +35,14 @@ int main()
         }
         return 0;
         break;
+    }
     case 'v':
+    {
+        appointment apps[256];
+        searchFromFile(apps);
+        printf("%s", apps[1].event);
         break;
+    }
     case 'm':
         break;
     case 's':

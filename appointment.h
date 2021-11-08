@@ -63,27 +63,47 @@ int Add(appointment *appTemp)
     if (buf[strlen(buf) - 1] == '\n')
         buf[strlen(buf) - 1] = '\0';
     strncpy(appTemp->event, buf, sizeof(appTemp->event));
-    
+
     return 1;
+}
+
+int searchFromFile(appointment appTemp[])
+{
+    int dataCount = 0;
+    FILE *store = fopen("database", "r");
+    if (store == NULL)
+    {
+        printf("File is NULL");
+        return -1;
+    }
+    char temp[784];
+    while ((fgets(temp, 784, store) != NULL) && (dataCount < 255))
+    {
+        dataCount++;
+        char *token = calloc(772, sizeof(char));
+        sscanf(temp, "%4d%2d%2d%2d%2d%[^\n]", &appTemp[dataCount - 1].year, &appTemp[dataCount - 1].month, &appTemp[dataCount - 1].day, &appTemp[dataCount - 1].hour, &appTemp[dataCount - 1].minute, token);
+        token = strtok(token, "|");
+        strncpy(appTemp[dataCount - 1].name, token, sizeof(appTemp[dataCount - 1].name));
+        token = strtok(NULL, "|");
+        strncpy(appTemp[dataCount - 1].location, token, sizeof(appTemp[dataCount - 1].location));
+        token = strtok(NULL, "|");
+        strncpy(appTemp[dataCount - 1].event, token, sizeof(appTemp[dataCount - 1].event));
+    }
+    fclose(store);
+    return 0;
 }
 
 int storeToFile(appointment *appTemp)
 {
     FILE *store = fopen("database", "a+");
-    char *temp = calloc(256, sizeof(char));
-    itoa(appTemp->year, temp, 10);
-    fputs(temp, store);
-    itoa(appTemp->month, temp, 10);
-    fputs(temp, store);
-    itoa(appTemp->day, temp, 10);
-    fputs(temp, store);
-    itoa(appTemp->minute, temp, 10);
-    fputs(temp, store);
-    itoa(appTemp->hour, temp, 10);
-    fputs(temp, store);
-    fputs(appTemp->name, store);
-    fputs(appTemp->location, store);
-    fputs(appTemp->event, store);
+    fprintf(store, "%04d", appTemp->year);
+    fprintf(store, "%02d", appTemp->month);
+    fprintf(store, "%02d", appTemp->day);
+    fprintf(store, "%02d", appTemp->hour);
+    fprintf(store, "%02d", appTemp->minute);
+    fprintf(store, "%s|", appTemp->name);
+    fprintf(store, "%s|", appTemp->location);
+    fprintf(store, "%s\n", appTemp->event);
     fclose(store);
     return 0;
 }
