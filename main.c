@@ -23,7 +23,7 @@ int main()
         appointment app;
         if (Add(&app))
         {
-            storeToFile(toString(&app));
+            storeToFile(&app);
             main();
             return 0;
         }

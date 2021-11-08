@@ -18,7 +18,6 @@ void TimsAddForm()
     system("cls");
     printf("=======================================================\n");
     printf("(Prass b for back)\n");
-    printf("Please enter the date(yyyy/mm/dd): ");
 }
 
 void TimsCloseForm()
