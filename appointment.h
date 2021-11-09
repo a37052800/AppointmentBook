@@ -14,6 +14,14 @@ typedef struct appointment
     char location[256];
 } appointment;
 
+int Verify(appointment *appTemp);
+int Delete(appointment *appTemp);
+int Modify(appointment *appTemp);
+int Ceate(appointment *appTemp);
+int searchFromFile(appointment result[], appointment *key);
+int storeToFile(appointment *appTemp);
+char *toString(appointment *appTemp);
+
 int Verify(appointment *appTemp)
 {
     if ((appTemp->year == 0) || (appTemp->month == 0) || (appTemp->day == 0))
@@ -21,9 +29,95 @@ int Verify(appointment *appTemp)
     return 0;
 }
 
+int Delete(appointment *appTemp)
+{
+    FILE *store = fopen("database", "r");
+    FILE *delete = fopen("delete", "w");
+    if (store == NULL)
+    {
+        printf("File is NULL");
+        return -1;
+    }
+    char temp[784];
+    while (fgets(temp, 784, store) != NULL)
+    {
+        int yearTemp, monthTemp, dayTemp, hourTemp, minuteTemp;
+        sscanf(temp, "%4d%2d%2d%2d%2d", &yearTemp, &monthTemp, &dayTemp, &hourTemp, &minuteTemp);
+        if ((appTemp->year != yearTemp) || (appTemp->month != monthTemp) || (appTemp->day != dayTemp) || (appTemp->hour != hourTemp) || (appTemp->minute != minuteTemp))
+        {
+            fputs(temp, delete);
+        }
+    }
+    fclose(store);
+    fclose(delete);
+    remove("database");
+    rename("delete", "database");
+}
+
 int Modify(appointment *appTemp)
 {
-    print("Original date:%04d/%02d/%02d")
+    Delete(appTemp);
+    printf("Original date:%04d/%02d/%02d\n", appTemp->year, appTemp->month, appTemp->day);
+    printf("Modify date(yyyy/mm/dd):");
+    char buf[256];
+    setbuf(stdin, NULL);
+    fgets(buf, sizeof(buf), stdin);
+    char *token = strtok(buf, "/");
+    if (token[0] == 'b')
+        return 0;
+    else if (token[0] != 's')
+    {
+        appTemp->year = atoi(token);
+        token = strtok(NULL, "/");
+        appTemp->month = atoi(token);
+        token = strtok(NULL, "/");
+        appTemp->day = atoi(token);
+    }
+    printf("Original time:%02d:%02d\n", appTemp->hour, appTemp->minute);
+    printf("Modify time(hh:mm):");
+    setbuf(stdin, NULL);
+    fgets(buf, sizeof(buf), stdin);
+    token = strtok(buf, ":");
+    if (token[0] == 'b')
+        return 0;
+    else if (token[0] != 's')
+    {
+        appTemp->hour = atoi(token);
+        token = strtok(NULL, ":");
+        appTemp->minute = atoi(token);
+    }
+    printf("Original name:%s\n", appTemp->name);
+    printf("Modify name:");
+    setbuf(stdin, NULL);
+    fgets(buf, sizeof(buf), stdin);
+    if (buf[strlen(buf) - 1] == '\n')
+        buf[strlen(buf) - 1] = '\0';
+    if ((strlen(buf) == 1) && (buf[0] == 'b'))
+        return 0;
+    else if ((strlen(buf) != 1) || (buf[0] != 's'))
+        strncpy(appTemp->name, buf, sizeof(appTemp->name));
+    printf("Original location:%s\n", appTemp->location);
+    printf("Modify location:");
+    setbuf(stdin, NULL);
+    fgets(buf, sizeof(buf), stdin);
+    if (buf[strlen(buf) - 1] == '\n')
+        buf[strlen(buf) - 1] = '\0';
+    if ((strlen(buf) == 1) && (buf[0] == 'b'))
+        return 0;
+    else if ((strlen(buf) != 1) || (buf[0] != 's'))
+        strncpy(appTemp->location, buf, sizeof(appTemp->location));
+    printf("Original event:%s\n", appTemp->event);
+    printf("Modify event:");
+    setbuf(stdin, NULL);
+    fgets(buf, sizeof(buf), stdin);
+    if (buf[strlen(buf) - 1] == '\n')
+        buf[strlen(buf) - 1] = '\0';
+    if ((strlen(buf) == 1) && (buf[0] == 'b'))
+        return 0;
+    else if ((strlen(buf) != 1) || (buf[0] != 's'))
+        strncpy(appTemp->event, buf, sizeof(appTemp->event));
+    storeToFile(appTemp);
+    return 0;
 }
 
 int Ceate(appointment *appTemp)
@@ -62,7 +156,7 @@ int Ceate(appointment *appTemp)
         buf[strlen(buf) - 1] = '\0';
     strncpy(appTemp->name, buf, sizeof(appTemp->name));
     setbuf(stdin, NULL);
-    printf("Please enter loaction:");
+    printf("Please enter location:");
     fgets(buf, sizeof(buf), stdin);
     if (buf[strlen(buf) - 1] == '\n')
         buf[strlen(buf) - 1] = '\0';

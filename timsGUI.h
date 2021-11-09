@@ -28,6 +28,20 @@ void TimsViewForm()
     printf("Please enter the command:");
 }
 
+void TimsModifyForm()
+{
+    system("cls");
+    printf("=======================================================\n");
+    printf("(s:Skip, b:Back)\n");
+}
+
+void TimsModDelForm()
+{
+    system("cls");
+    printf("=======================================================\n");
+    printf("(d:Delete, m:Modify, b:Back)\n");
+}
+
 void TimsSearchForm()
 {
     system("cls");
@@ -69,4 +83,5 @@ char *weekIntToStr(int week)
         return "Sunday";
         break;
     }
+    return 0;
 }

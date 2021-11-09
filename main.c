@@ -1,5 +1,4 @@
 #include "appointment.h"
-#include "timsFunction.h"
 #include "timsGUI.h"
 #include <conio.h>
 #include <math.h>
@@ -160,7 +159,30 @@ int main()
             main();
             return 0;
         }
-        
+        TimsModDelForm();
+        char modifyCommand;
+        modifyCommand = getch();
+        while ((modifyCommand != 'd') && (modifyCommand != 'm') && (modifyCommand != 'b'))
+        {
+            modifyCommand = getch();
+            printf("%c\b", command);
+        }
+        switch (modifyCommand)
+        {
+        case 'd':
+        {
+            Delete(&result[0]);
+
+            break;
+        }
+        case 'm':
+        {
+            TimsModifyForm();
+            Modify(&result[0]);
+            break;
+        }
+        }
+        break;
     }
     case 's':
     {
