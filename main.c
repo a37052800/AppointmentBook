@@ -172,7 +172,6 @@ int main()
         case 'd':
         {
             Delete(&result[0]);
-
             break;
         }
         case 'm':
@@ -209,5 +208,6 @@ int main()
         return 0;
         break;
     }
+    main();
     return 0;
 }
