@@ -14,7 +14,19 @@ typedef struct appointment
     char location[256];
 } appointment;
 
-int Add(appointment *appTemp)
+int Verify(appointment *appTemp)
+{
+    if ((appTemp->year == 0) || (appTemp->month == 0) || (appTemp->day == 0))
+        return 0;
+    return 0;
+}
+
+int Modify(appointment *appTemp)
+{
+    print("Original date:%04d/%02d/%02d")
+}
+
+int Ceate(appointment *appTemp)
 {
     char buf[256];
     setbuf(stdin, NULL);
@@ -31,8 +43,6 @@ int Add(appointment *appTemp)
         token = strtok(NULL, "/");
         appTemp->day = atoi(token);
     }
-    if ((appTemp->year == 0) || (appTemp->month == 0) || (appTemp->day == 0))
-        return 0;
     setbuf(stdin, NULL);
     printf("Please enter the 24-h time(hh:mm):");
     fgets(buf, sizeof(buf), stdin);
@@ -67,7 +77,7 @@ int Add(appointment *appTemp)
     return 1;
 }
 
-int searchFromFile(appointment appTemp[])
+int searchFromFile(appointment result[], appointment *key)
 {
     int dataCount = 0;
     FILE *store = fopen("database", "r");
@@ -77,20 +87,38 @@ int searchFromFile(appointment appTemp[])
         return -1;
     }
     char temp[784];
+    appointment appTemp;
     while ((fgets(temp, 784, store) != NULL) && (dataCount < 255))
     {
-        dataCount++;
         char *token = calloc(772, sizeof(char));
-        sscanf(temp, "%4d%2d%2d%2d%2d%[^\n]", &appTemp[dataCount - 1].year, &appTemp[dataCount - 1].month, &appTemp[dataCount - 1].day, &appTemp[dataCount - 1].hour, &appTemp[dataCount - 1].minute, token);
+        sscanf(temp, "%4d%2d%2d%2d%2d%[^\n]", &appTemp.year, &appTemp.month, &appTemp.day, &appTemp.hour, &appTemp.minute, token);
         token = strtok(token, "|");
-        strncpy(appTemp[dataCount - 1].name, token, sizeof(appTemp[dataCount - 1].name));
+        strncpy(appTemp.name, token, sizeof(appTemp.name));
         token = strtok(NULL, "|");
-        strncpy(appTemp[dataCount - 1].location, token, sizeof(appTemp[dataCount - 1].location));
+        strncpy(appTemp.location, token, sizeof(appTemp.location));
         token = strtok(NULL, "|");
-        strncpy(appTemp[dataCount - 1].event, token, sizeof(appTemp[dataCount - 1].event));
+        strncpy(appTemp.event, token, sizeof(appTemp.event));
+        if ((key->year != -1) && (key->year != appTemp.year))
+            continue;
+        if ((key->month != -1) && (key->month != appTemp.month))
+            continue;
+        if ((key->day != -1) && (key->day != appTemp.day))
+            continue;
+        if ((key->hour != -1) && (key->hour != appTemp.hour))
+            continue;
+        if ((key->minute != -1) && (key->minute != appTemp.minute))
+            continue;
+        if ((strstr(key->event, "-1") == NULL) && (strstr(appTemp.event, key->event) == NULL))
+            continue;
+        if ((strstr(key->name, "-1") == NULL) && (strstr(appTemp.name, key->name) == NULL))
+            continue;
+        if ((strstr(key->location, "-1") == NULL) && (strstr(appTemp.location, key->location) == NULL))
+            continue;
+        result[dataCount] = appTemp;
+        dataCount++;
     }
     fclose(store);
-    return 0;
+    return dataCount;
 }
 
 int storeToFile(appointment *appTemp)
@@ -110,15 +138,7 @@ int storeToFile(appointment *appTemp)
 
 char *toString(appointment *appTemp)
 {
-    char *reply = calloc(9, sizeof(char));
-    reply[8] = '\n';
-    reply[7] = (char)(appTemp->day % 10 + 48);
-    reply[6] = (char)(appTemp->day / 10 % 10 + 48);
-    reply[5] = (char)(appTemp->month % 10 + 48);
-    reply[4] = (char)(appTemp->month / 10 % 10 + 48);
-    reply[3] = (char)(appTemp->year % 10 + 48);
-    reply[2] = (char)((appTemp->year / 10) % 10 + 48);
-    reply[1] = (char)((appTemp->year / 100) % 10 + 48);
-    reply[0] = (char)((appTemp->year / 1000) % 100 + 48);
+    char *reply = calloc(785, sizeof(char));
+    sprintf(reply, "%04d/%02d/%02d %02d:%02d %s %s %s\n", appTemp->year, appTemp->month, appTemp->day, appTemp->hour, appTemp->minute, appTemp->name, appTemp->location, appTemp->event);
     return reply;
 }
