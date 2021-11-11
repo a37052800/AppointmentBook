@@ -2,7 +2,12 @@
 #include <stdlib.h>
 void TimsMainForm();
 void TimsAddForm();
+void TimsViewForm();
+void TimsModifyForm();
+void TimsModDelForm();
+void TimsSearchForm();
 void TimsCloseForm();
+char *weekIntToStr(int week);
 
 void TimsMainForm()
 {

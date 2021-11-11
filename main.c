@@ -204,9 +204,11 @@ int main()
         return 0;
     }
     case 'e':
+    {
         TimsCloseForm();
         return 0;
         break;
+    }
     }
     main();
     return 0;
