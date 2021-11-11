@@ -22,18 +22,16 @@ int main()
     {
         TimsAddForm();
         appointment app;
-        if (Ceate(&app))
+        switch (Ceate(&app))
         {
+        case 1:
             storeToFile(&app);
-            main();
-            return 0;
+            TimsResultForm(1);
+            break;
+        case -1:
+            TimsResultForm(0);
+            break;
         }
-        else
-        {
-            main();
-            return 0;
-        }
-        return 0;
         break;
     }
     case 'v':
@@ -46,10 +44,7 @@ int main()
         fgets(buf, sizeof(buf), stdin);
         char *token = strtok(buf, "/");
         if (token[0] == 'b')
-        {
-            main();
-            return 0;
-        }
+            break;
         else
         {
             key.year = atoi(token);
@@ -96,9 +91,10 @@ int main()
             int w = (int)(d + (2.6 * m - 0.2) + 5 * (y % 4) + 3 * y + 5 * (c % 4)) % 7;
             key.day += 1 - w;
             system("cls");
+            printf("=======================================================\n");
             for (int i = 1; i <= 7; i++)
             {
-                printf("%02d/%02d %s:\n", key.month, key.day, weekIntToStr(i));
+                printf("%02d/%02d %s:\n\n", key.month, key.day, weekIntToStr(i));
                 appointment result[256];
                 int n = searchFromFile(result, &key);
                 if (n == 0)
@@ -107,6 +103,7 @@ int main()
                 {
                     printf("    %02d:%02d %s %s %s\n", result[i].hour, result[i].minute, result[i].name, result[i].location, result[i].event);
                 }
+                printf("\n");
                 key.day++;
             }
             break;
@@ -114,8 +111,6 @@ int main()
         }
         printf("Press any key...");
         getch();
-        main();
-        return 0;
         break;
     }
     case 'm':
@@ -128,7 +123,7 @@ int main()
         fgets(buf, sizeof(buf), stdin);
         char *token = strtok(buf, "/");
         if (token[0] == 'b')
-            return 0;
+            break;
         else
         {
             key.year = atoi(token);
@@ -142,7 +137,7 @@ int main()
         fgets(buf, sizeof(buf), stdin);
         token = strtok(buf, ":");
         if (token[0] == 'b')
-            return 0;
+            break;
         else
         {
             key.hour = atoi(token);
@@ -156,8 +151,7 @@ int main()
             printf("Not fond data\n");
             printf("Press any key...");
             getch();
-            main();
-            return 0;
+            break;
         }
         TimsModDelForm();
         char modifyCommand;
@@ -172,12 +166,14 @@ int main()
         case 'd':
         {
             Delete(&result[0]);
+            TimsResultForm(1);
             break;
         }
         case 'm':
         {
             TimsModifyForm();
             Modify(&result[0]);
+            TimsResultForm(1);
             break;
         }
         }
@@ -193,6 +189,8 @@ int main()
             int n = searchFromFile(result, &key);
             system("cls");
             printf("=======================================================\n");
+            if (n == 0)
+                printf("Not found\n");
             for (int i = 0; i < n; i++)
             {
                 printf("%s", toString(&result[i]));
@@ -200,14 +198,12 @@ int main()
         }
         printf("Press any key...");
         getch();
-        main();
-        return 0;
+        break;
     }
     case 'e':
     {
         TimsCloseForm();
         return 0;
-        break;
     }
     }
     main();

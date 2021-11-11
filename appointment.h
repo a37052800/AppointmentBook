@@ -25,8 +25,12 @@ char *toString(appointment *appTemp);
 int Verify(appointment *appTemp)
 {
     if ((appTemp->year == 0) || (appTemp->month == 0) || (appTemp->day == 0))
-        return 0;
-    return 0;
+        return -1;
+    if ((appTemp->hour < 0) || (appTemp->hour > 59) || (appTemp->minute < 0) || (appTemp->minute > 59))
+        return -1;
+    if ((strlen(appTemp->name) > 0) || (strlen(appTemp->location) > 0) || (strlen(appTemp->event) > 0))
+        return -1;
+    return 1;
 }
 
 int Delete(appointment *appTemp)
@@ -52,6 +56,7 @@ int Delete(appointment *appTemp)
     fclose(delete);
     remove("database");
     rename("delete", "database");
+    return 0;
 }
 
 int Modify(appointment *appTemp)
@@ -154,21 +159,27 @@ int Ceate(appointment *appTemp)
     fgets(buf, sizeof(buf), stdin);
     if (buf[strlen(buf) - 1] == '\n')
         buf[strlen(buf) - 1] = '\0';
+    if ((strlen(buf) == 1) && (buf[0] == 'b'))
+        return 0;
     strncpy(appTemp->name, buf, sizeof(appTemp->name));
     setbuf(stdin, NULL);
     printf("Please enter location:");
     fgets(buf, sizeof(buf), stdin);
     if (buf[strlen(buf) - 1] == '\n')
         buf[strlen(buf) - 1] = '\0';
+    if ((strlen(buf) == 1) && (buf[0] == 'b'))
+        return 0;
     strncpy(appTemp->location, buf, sizeof(appTemp->location));
     setbuf(stdin, NULL);
     printf("Please enter event:");
     fgets(buf, sizeof(buf), stdin);
     if (buf[strlen(buf) - 1] == '\n')
         buf[strlen(buf) - 1] = '\0';
+    if ((strlen(buf) == 1) && (buf[0] == 'b'))
+        return 0;
     strncpy(appTemp->event, buf, sizeof(appTemp->event));
 
-    return 1;
+    return Verify(appTemp);
 }
 
 int searchFromFile(appointment result[], appointment *key)

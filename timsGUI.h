@@ -1,5 +1,7 @@
+#include <conio.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 void TimsMainForm();
 void TimsAddForm();
 void TimsViewForm();
@@ -8,6 +10,7 @@ void TimsModDelForm();
 void TimsSearchForm();
 void TimsCloseForm();
 char *weekIntToStr(int week);
+void TimsResultForm(int bool);
 
 void TimsMainForm()
 {
@@ -59,7 +62,20 @@ void TimsCloseForm()
     system("cls");
     printf("=======================================================\n");
     printf("Program Close\n");
-    printf("=======================================================");
+    printf("Press any key...");
+    getch();
+}
+
+void TimsResultForm(int bool)
+{
+    system("cls");
+    printf("=======================================================\n");
+    if (bool == 1)
+        printf("Success\n");
+    else
+        printf("Failed. please try again\n");
+    printf("Press any key...");
+    getch();
 }
 
 char *weekIntToStr(int week)
