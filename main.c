@@ -22,10 +22,7 @@ int mainForm()
     char command;
     command = getch();
     while ((command != 'n') && (command != 'v') && (command != 'm') && (command != 's') && (command != 'e'))
-    {
         command = getch();
-        printf("%c\b", command);
-    }
     switch (command)
     {
     case 'n':

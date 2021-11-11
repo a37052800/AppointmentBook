@@ -65,6 +65,8 @@ char TimsCloseForm()
     printf("(y:Yes, n:No)\n");
     printf("Do you want to save the changes?(y:Yes, n:No)");
     char ch = getch();
+    while ((ch != 'y') && (ch != 'n'))
+        ch = getch();
     return ch;
 }
 

@@ -20,6 +20,7 @@ int Delete(appointment *appTemp);
 int Modify(appointment *appTemp);
 int Ceate(appointment *appTemp);
 int searchFromFile(appointment result[], appointment *key);
+int readFile(appointment result[]);
 int storeToFile(appointment *appTemp);
 char *toString(appointment *appTemp);
 
@@ -84,7 +85,10 @@ int Modify(appointment *appTemp)
     fgets(buf, sizeof(buf), stdin);
     char *token = strtok(buf, "/");
     if (token[0] == 'b')
+    {
+        storeToFile(&original);
         return 0;
+    }
     else if (token[0] != 's')
     {
         appTemp->year = atoi(token);
@@ -99,7 +103,10 @@ int Modify(appointment *appTemp)
     fgets(buf, sizeof(buf), stdin);
     token = strtok(buf, ":");
     if (token[0] == 'b')
+    {
+        storeToFile(&original);
         return 0;
+    }
     else if (token[0] != 's')
     {
         appTemp->hour = atoi(token);
@@ -113,7 +120,10 @@ int Modify(appointment *appTemp)
     if (buf[strlen(buf) - 1] == '\n')
         buf[strlen(buf) - 1] = '\0';
     if ((strlen(buf) == 1) && (buf[0] == 'b'))
+    {
+        storeToFile(&original);
         return 0;
+    }
     else if ((strlen(buf) != 1) || (buf[0] != 's'))
         strncpy(appTemp->name, buf, sizeof(appTemp->name));
     printf("Original location:%s\n", appTemp->location);
@@ -123,7 +133,10 @@ int Modify(appointment *appTemp)
     if (buf[strlen(buf) - 1] == '\n')
         buf[strlen(buf) - 1] = '\0';
     if ((strlen(buf) == 1) && (buf[0] == 'b'))
+    {
+        storeToFile(&original);
         return 0;
+    }
     else if ((strlen(buf) != 1) || (buf[0] != 's'))
         strncpy(appTemp->location, buf, sizeof(appTemp->location));
     printf("Original event:%s\n", appTemp->event);
@@ -133,7 +146,10 @@ int Modify(appointment *appTemp)
     if (buf[strlen(buf) - 1] == '\n')
         buf[strlen(buf) - 1] = '\0';
     if ((strlen(buf) == 1) && (buf[0] == 'b'))
+    {
+        storeToFile(&original);
         return 0;
+    }
     else if ((strlen(buf) != 1) || (buf[0] != 's'))
         strncpy(appTemp->event, buf, sizeof(appTemp->event));
     if (Verify(appTemp) == -1)
