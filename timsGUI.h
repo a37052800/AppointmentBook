@@ -8,7 +8,7 @@ void TimsViewForm();
 void TimsModifyForm();
 void TimsModDelForm();
 void TimsSearchForm();
-void TimsCloseForm();
+char TimsCloseForm();
 char *weekIntToStr(int week);
 void TimsResultForm(int bool);
 
@@ -54,16 +54,18 @@ void TimsSearchForm()
 {
     system("cls");
     printf("=======================================================\n");
-    printf("(Enter '-1' to query, 'b' for back)\n");
+    printf("(Enter '-1' or 'Enter' to query, 'b' for back)\n");
 }
 
-void TimsCloseForm()
+char TimsCloseForm()
 {
     system("cls");
     printf("=======================================================\n");
-    printf("Program Close\n");
-    printf("Press any key...");
-    getch();
+    printf("Program Close...\n");
+    printf("(y:Yes, n:No)\n");
+    printf("Do you want to save the changes?(y:Yes, n:No)");
+    char ch = getch();
+    return ch;
 }
 
 void TimsResultForm(int bool)

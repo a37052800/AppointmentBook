@@ -6,7 +6,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+int mainForm();
+appointment original[256];
+int dataCount;
+
 int main()
+{
+    dataCount = readFile(original);
+    mainForm();
+}
+
+int mainForm()
 {
     TimsMainForm();
     char command;
@@ -172,8 +182,16 @@ int main()
         case 'm':
         {
             TimsModifyForm();
-            Modify(&result[0]);
-            TimsResultForm(1);
+            switch (Modify(&result[0]))
+            {
+            case 1:
+                storeToFile(&result[0]);
+                TimsResultForm(1);
+                break;
+            case -1:
+                TimsResultForm(0);
+                break;
+            }
             break;
         }
         }
@@ -202,10 +220,19 @@ int main()
     }
     case 'e':
     {
-        TimsCloseForm();
+        switch (TimsCloseForm())
+        {
+        case 'y':
+            return 0;
+        case 'n':
+            remove("database");
+            for (int i = 0; i < dataCount; i++)
+                storeToFile(&original[i]);
+            return 0;
+        }
         return 0;
     }
     }
-    main();
+    mainForm();
     return 0;
 }

@@ -14,6 +14,7 @@ typedef struct appointment
     char location[256];
 } appointment;
 
+void Copy(appointment *appTemp1, appointment *appTemp2);
 int Verify(appointment *appTemp);
 int Delete(appointment *appTemp);
 int Modify(appointment *appTemp);
@@ -22,13 +23,25 @@ int searchFromFile(appointment result[], appointment *key);
 int storeToFile(appointment *appTemp);
 char *toString(appointment *appTemp);
 
+void Copy(appointment *appTemp1, appointment *appTemp2)
+{
+    appTemp2->day = appTemp1->day;
+    appTemp2->month = appTemp1->month;
+    appTemp2->year = appTemp1->year;
+    appTemp2->hour = appTemp1->hour;
+    appTemp2->minute = appTemp1->minute;
+    strncpy(appTemp2->name, appTemp1->name, sizeof(appTemp2->name));
+    strncpy(appTemp2->location, appTemp1->location, sizeof(appTemp2->location));
+    strncpy(appTemp2->event, appTemp1->event, sizeof(appTemp2->event));
+}
+
 int Verify(appointment *appTemp)
 {
     if ((appTemp->year == 0) || (appTemp->month == 0) || (appTemp->day == 0))
         return -1;
-    if ((appTemp->hour < 0) || (appTemp->hour > 59) || (appTemp->minute < 0) || (appTemp->minute > 59))
+    if ((appTemp->hour < 0) || (appTemp->hour > 24) || (appTemp->minute < 0) || (appTemp->minute > 59))
         return -1;
-    if ((strlen(appTemp->name) > 0) || (strlen(appTemp->location) > 0) || (strlen(appTemp->event) > 0))
+    if ((strlen(appTemp->name) <= 0) || (strlen(appTemp->location) <= 0) || (strlen(appTemp->event) <= 0))
         return -1;
     return 1;
 }
@@ -39,7 +52,7 @@ int Delete(appointment *appTemp)
     FILE *delete = fopen("delete", "w");
     if (store == NULL)
     {
-        printf("File is NULL");
+        printf("File is NULL\n");
         return -1;
     }
     char temp[784];
@@ -61,6 +74,8 @@ int Delete(appointment *appTemp)
 
 int Modify(appointment *appTemp)
 {
+    appointment original;
+    Copy(appTemp, &original);
     Delete(appTemp);
     printf("Original date:%04d/%02d/%02d\n", appTemp->year, appTemp->month, appTemp->day);
     printf("Modify date(yyyy/mm/dd):");
@@ -121,8 +136,9 @@ int Modify(appointment *appTemp)
         return 0;
     else if ((strlen(buf) != 1) || (buf[0] != 's'))
         strncpy(appTemp->event, buf, sizeof(appTemp->event));
-    storeToFile(appTemp);
-    return 0;
+    if (Verify(appTemp) == -1)
+        storeToFile(&original);
+    return Verify(appTemp);
 }
 
 int Ceate(appointment *appTemp)
@@ -188,7 +204,7 @@ int searchFromFile(appointment result[], appointment *key)
     FILE *store = fopen("database", "r");
     if (store == NULL)
     {
-        printf("File is NULL");
+        printf("File is NULL\n");
         return -1;
     }
     char temp[784];
@@ -203,22 +219,50 @@ int searchFromFile(appointment result[], appointment *key)
         strncpy(appTemp.location, token, sizeof(appTemp.location));
         token = strtok(NULL, "|");
         strncpy(appTemp.event, token, sizeof(appTemp.event));
-        if ((key->year != -1) && (key->year != appTemp.year))
+        if ((key->year != 0) && (key->year != -1) && (key->year != appTemp.year))
             continue;
-        if ((key->month != -1) && (key->month != appTemp.month))
+        if ((key->month != 0) && (key->month != -1) && (key->month != appTemp.month))
             continue;
-        if ((key->day != -1) && (key->day != appTemp.day))
+        if ((key->day != 0) && (key->day != -1) && (key->day != appTemp.day))
             continue;
-        if ((key->hour != -1) && (key->hour != appTemp.hour))
+        if ((key->hour != 0) && (key->hour != -1) && (key->hour != appTemp.hour))
             continue;
-        if ((key->minute != -1) && (key->minute != appTemp.minute))
+        if ((key->minute != 0) && (key->minute != -1) && (key->minute != appTemp.minute))
             continue;
-        if ((strstr(key->event, "-1") == NULL) && (strstr(appTemp.event, key->event) == NULL))
+        if ((strlen(key->event) != 0) && (strstr(key->event, "-1") == NULL) && (strstr(appTemp.event, key->event) == NULL))
             continue;
-        if ((strstr(key->name, "-1") == NULL) && (strstr(appTemp.name, key->name) == NULL))
+        if ((strlen(key->name) != 0) && (strstr(key->name, "-1") == NULL) && (strstr(appTemp.name, key->name) == NULL))
             continue;
-        if ((strstr(key->location, "-1") == NULL) && (strstr(appTemp.location, key->location) == NULL))
+        if ((strlen(key->location) != 0) && (strstr(key->location, "-1") == NULL) && (strstr(appTemp.location, key->location) == NULL))
             continue;
+        result[dataCount] = appTemp;
+        dataCount++;
+    }
+    fclose(store);
+    return dataCount;
+}
+
+int readFile(appointment result[])
+{
+    int dataCount = 0;
+    FILE *store = fopen("database", "r");
+    if (store == NULL)
+    {
+        printf("File is NULL\n");
+        return -1;
+    }
+    char temp[784];
+    appointment appTemp;
+    while ((fgets(temp, 784, store) != NULL) && (dataCount < 255))
+    {
+        char *token = calloc(772, sizeof(char));
+        sscanf(temp, "%4d%2d%2d%2d%2d%[^\n]", &appTemp.year, &appTemp.month, &appTemp.day, &appTemp.hour, &appTemp.minute, token);
+        token = strtok(token, "|");
+        strncpy(appTemp.name, token, sizeof(appTemp.name));
+        token = strtok(NULL, "|");
+        strncpy(appTemp.location, token, sizeof(appTemp.location));
+        token = strtok(NULL, "|");
+        strncpy(appTemp.event, token, sizeof(appTemp.event));
         result[dataCount] = appTemp;
         dataCount++;
     }
